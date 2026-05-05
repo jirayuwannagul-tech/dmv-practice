@@ -4,6 +4,7 @@
 
 document.addEventListener('DOMContentLoaded', () => {
   renderTestGrid();
+  initSupportModal();
 });
 
 function renderTestGrid() {
@@ -61,4 +62,32 @@ function createTestCard(meta) {
 
 function navigateToExam(testNumber) {
   window.location.href = `exam.html?test=${testNumber}`;
+}
+
+function initSupportModal() {
+  const openBtn = document.getElementById('support-open');
+  const modal = document.getElementById('support-modal');
+  if (!openBtn || !modal) return;
+
+  const closeTargets = modal.querySelectorAll('[data-support-close]');
+
+  openBtn.addEventListener('click', () => {
+    modal.classList.add('is-open');
+    modal.setAttribute('aria-hidden', 'false');
+  });
+
+  closeTargets.forEach((target) => {
+    target.addEventListener('click', () => closeSupportModal(modal));
+  });
+
+  document.addEventListener('keydown', (e) => {
+    if (e.key === 'Escape' && modal.classList.contains('is-open')) {
+      closeSupportModal(modal);
+    }
+  });
+}
+
+function closeSupportModal(modal) {
+  modal.classList.remove('is-open');
+  modal.setAttribute('aria-hidden', 'true');
 }
