@@ -71,6 +71,7 @@ function renderQuestion(index) {
 
   // question text
   document.getElementById('question-text').textContent = q.question;
+  renderQuestionMedia(q);
 
   // choices
   const choicesEl = document.getElementById('choices-list');
@@ -97,6 +98,114 @@ function renderQuestion(index) {
   // nav buttons
   document.getElementById('btn-prev').disabled = index === 0;
   updateNextButton();
+}
+
+function renderQuestionMedia(q) {
+  const mediaEl = document.getElementById('question-media');
+  mediaEl.innerHTML = '';
+  mediaEl.classList.remove('has-media');
+
+  if (!q.questionSign) return;
+
+  mediaEl.appendChild(createTrafficSign(q.questionSign));
+  mediaEl.classList.add('has-media');
+}
+
+function createTrafficSign(sign) {
+  const svg = document.createElementNS('http://www.w3.org/2000/svg', 'svg');
+  svg.setAttribute('class', 'traffic-sign');
+  svg.setAttribute('viewBox', '0 0 220 160');
+  svg.setAttribute('role', 'img');
+  svg.setAttribute('aria-label', sign.label || sign.text || 'traffic sign');
+
+  const shape = sign.shape || 'rectangle';
+  const fill = sign.fill || '#ffffff';
+  const stroke = sign.stroke || '#111827';
+  const textColor = sign.textColor || '#111827';
+
+  if (shape === 'stop') {
+    appendPolygon(svg, '110,12 158,32 178,80 158,128 110,148 62,128 42,80 62,32', fill, stroke, 5);
+  } else if (shape === 'yield') {
+    appendPolygon(svg, '110,140 28,24 192,24', fill, stroke, 5);
+    appendPolygon(svg, '110,116 58,42 162,42', '#ffffff', '#ffffff', 0);
+  } else if (shape === 'diamond') {
+    appendPolygon(svg, '110,12 196,80 110,148 24,80', fill, stroke, 4);
+  } else if (shape === 'pentagon') {
+    appendPolygon(svg, '110,12 186,70 158,148 62,148 34,70', fill, stroke, 4);
+  } else if (shape === 'circle-slash') {
+    appendCircle(svg, 110, 80, 58, fill, stroke, 5);
+    appendLine(svg, 72, 118, 148, 42, stroke, 8);
+  } else if (shape === 'railroad') {
+    appendCircle(svg, 110, 80, 62, fill, stroke, 5);
+    appendLine(svg, 66, 124, 154, 36, stroke, 8);
+    appendLine(svg, 66, 36, 154, 124, stroke, 8);
+  } else {
+    appendRect(svg, 36, 24, 148, 112, 8, fill, stroke, 4);
+  }
+
+  const lines = Array.isArray(sign.lines) ? sign.lines : String(sign.text || '').split('\n');
+  const fontSize = sign.fontSize || (lines.length > 3 ? 19 : 23);
+  const startY = 80 - ((lines.length - 1) * fontSize * .62);
+  lines.forEach((line, i) => {
+    appendText(svg, line, 110, startY + (i * fontSize * 1.18), fontSize, textColor);
+  });
+
+  return svg;
+}
+
+function appendRect(svg, x, y, width, height, radius, fill, stroke, strokeWidth) {
+  const el = document.createElementNS('http://www.w3.org/2000/svg', 'rect');
+  el.setAttribute('x', x);
+  el.setAttribute('y', y);
+  el.setAttribute('width', width);
+  el.setAttribute('height', height);
+  el.setAttribute('rx', radius);
+  el.setAttribute('fill', fill);
+  el.setAttribute('stroke', stroke);
+  el.setAttribute('stroke-width', strokeWidth);
+  svg.appendChild(el);
+}
+
+function appendPolygon(svg, points, fill, stroke, strokeWidth) {
+  const el = document.createElementNS('http://www.w3.org/2000/svg', 'polygon');
+  el.setAttribute('points', points);
+  el.setAttribute('fill', fill);
+  el.setAttribute('stroke', stroke);
+  el.setAttribute('stroke-width', strokeWidth);
+  svg.appendChild(el);
+}
+
+function appendCircle(svg, cx, cy, r, fill, stroke, strokeWidth) {
+  const el = document.createElementNS('http://www.w3.org/2000/svg', 'circle');
+  el.setAttribute('cx', cx);
+  el.setAttribute('cy', cy);
+  el.setAttribute('r', r);
+  el.setAttribute('fill', fill);
+  el.setAttribute('stroke', stroke);
+  el.setAttribute('stroke-width', strokeWidth);
+  svg.appendChild(el);
+}
+
+function appendLine(svg, x1, y1, x2, y2, stroke, strokeWidth) {
+  const el = document.createElementNS('http://www.w3.org/2000/svg', 'line');
+  el.setAttribute('x1', x1);
+  el.setAttribute('y1', y1);
+  el.setAttribute('x2', x2);
+  el.setAttribute('y2', y2);
+  el.setAttribute('stroke', stroke);
+  el.setAttribute('stroke-width', strokeWidth);
+  el.setAttribute('stroke-linecap', 'round');
+  svg.appendChild(el);
+}
+
+function appendText(svg, value, x, y, fontSize, fill) {
+  const el = document.createElementNS('http://www.w3.org/2000/svg', 'text');
+  el.setAttribute('x', x);
+  el.setAttribute('y', y);
+  el.setAttribute('font-size', fontSize);
+  el.setAttribute('fill', fill);
+  el.textContent = value;
+  svg.appendChild(el);
 }
 
 /* ── Choice selection ───────────────────────────────────────── */

@@ -1181,6 +1181,15 @@ const DMV_TESTS = [
   {
     id: 103, test: 11,
     question: 'ขณะขับรถบนถนน ท่านเห็นป้าย STOP สีแดงรูปแปดเหลี่ยม ท่านต้อง:',
+    questionSign: {
+      shape: 'stop',
+      lines: ['STOP'],
+      label: 'STOP sign',
+      fill: '#c81e1e',
+      stroke: '#ffffff',
+      textColor: '#ffffff',
+      fontSize: 38
+    },
     choices: [
       'ชะลอความเร็วและระวัง',
       'หยุดรถให้สนิทที่เส้นหยุด ให้สิทธิ์รถและคนเดินเท้าที่มาก่อน จากนั้นจึงขับต่อไปเมื่อปลอดภัย',
@@ -1192,6 +1201,15 @@ const DMV_TESTS = [
   {
     id: 104, test: 11,
     question: 'ป้ายสามเหลี่ยมสีแดงขาว YIELD หมายความว่า:',
+    questionSign: {
+      shape: 'yield',
+      lines: ['YIELD'],
+      label: 'YIELD sign',
+      fill: '#c81e1e',
+      stroke: '#c81e1e',
+      textColor: '#c81e1e',
+      fontSize: 30
+    },
     choices: [
       'หยุดรถให้สนิทก่อนเสมอ',
       'ชะลอความเร็วลงและให้สิทธิ์รถและคนเดินเท้าที่มาก่อน',
@@ -1203,6 +1221,14 @@ const DMV_TESTS = [
   {
     id: 105, test: 11,
     question: 'ป้ายรูปสี่เหลี่ยมสีส้มในเขตก่อสร้าง หมายความว่า:',
+    questionSign: {
+      shape: 'diamond',
+      lines: ['ROAD', 'WORK', 'AHEAD'],
+      label: 'Road work ahead sign',
+      fill: '#f59e0b',
+      stroke: '#111827',
+      textColor: '#111827'
+    },
     choices: [
       'ขับรถตามปกติได้',
       'ต้องระมัดระวังเป็นพิเศษ ค่าปรับจะสูงขึ้นในเขตก่อสร้าง',
@@ -1214,6 +1240,15 @@ const DMV_TESTS = [
   {
     id: 106, test: 11,
     question: 'ป้ายสีขาว SPEED LIMIT 65 หมายความว่า:',
+    questionSign: {
+      shape: 'rectangle',
+      lines: ['SPEED', 'LIMIT', '65'],
+      label: 'Speed limit 65 sign',
+      fill: '#ffffff',
+      stroke: '#111827',
+      textColor: '#111827',
+      fontSize: 25
+    },
     choices: [
       'ท่านสามารถขับเร็วกว่านั้นได้เล็กน้อยในสภาพอากาศดี',
       'ความเร็วสูงสุดที่ถูกกฎหมายในสภาพปกติคือ 65 ไมล์ต่อชั่วโมง',
@@ -1225,6 +1260,15 @@ const DMV_TESTS = [
   {
     id: 107, test: 11,
     question: 'ป้ายกากบาทสีเหลืองบนถนนบ่งบอกว่า:',
+    questionSign: {
+      shape: 'railroad',
+      lines: ['R', 'R'],
+      label: 'Railroad crossing sign',
+      fill: '#f8fafc',
+      stroke: '#111827',
+      textColor: '#111827',
+      fontSize: 28
+    },
     choices: [
       'มีทางรถไฟข้ามถนน',
       'มีสี่แยกอยู่ข้างหน้า',
@@ -1236,6 +1280,15 @@ const DMV_TESTS = [
   {
     id: 108, test: 11,
     question: 'ป้ายวงกลมสีแดงมีขีดขวางตรงกลางบนพื้นสีขาว (DO NOT ENTER) หมายความว่า:',
+    questionSign: {
+      shape: 'circle-slash',
+      lines: ['DO NOT', 'ENTER'],
+      label: 'Do not enter sign',
+      fill: '#ffffff',
+      stroke: '#c81e1e',
+      textColor: '#c81e1e',
+      fontSize: 18
+    },
     choices: [
       'ห้ามเข้า — ท่านกำลังจะขับเข้าทางที่มีรถวิ่งสวนทางมา',
       'ช้าลง — มีรถเลี้ยวออกมา',
@@ -1247,6 +1300,15 @@ const DMV_TESTS = [
   {
     id: 109, test: 11,
     question: 'ป้ายสีขาว WRONG WAY หมายความว่า:',
+    questionSign: {
+      shape: 'rectangle',
+      lines: ['WRONG', 'WAY'],
+      label: 'Wrong way sign',
+      fill: '#c81e1e',
+      stroke: '#c81e1e',
+      textColor: '#ffffff',
+      fontSize: 30
+    },
     choices: [
       'ท่านกำลังขับรถสวนทาง ให้กลับรถหรือออกจากทางนี้ทันที',
       'ถนนข้างหน้าไปทางผิดทิศทาง',
@@ -1258,6 +1320,15 @@ const DMV_TESTS = [
   {
     id: 110, test: 11,
     question: 'ป้ายรูปเพชร (สี่เหลี่ยมตั้งหมุน) สีเหลือง คือ:',
+    questionSign: {
+      shape: 'diamond',
+      lines: ['WARNING'],
+      label: 'Yellow warning sign',
+      fill: '#facc15',
+      stroke: '#111827',
+      textColor: '#111827',
+      fontSize: 22
+    },
     choices: [
       'ป้ายบังคับที่ต้องปฏิบัติตามทุกครั้ง',
       'ป้ายเตือนให้ระวังสภาพถนนหรืออันตรายข้างหน้า',
@@ -1273,6 +1344,15 @@ const DMV_TESTS = [
   {
     id: 111, test: 12,
     question: 'ป้ายสีเขียวบนฟรีเวย์ หมายความว่า:',
+    questionSign: {
+      shape: 'rectangle',
+      lines: ['FREEWAY', 'NORTH', 'EXIT 24'],
+      label: 'Green freeway guide sign',
+      fill: '#15803d',
+      stroke: '#15803d',
+      textColor: '#ffffff',
+      fontSize: 21
+    },
     choices: [
       'ทางออกฉุกเฉิน',
       'ทางเข้าฟรีเวย์หรือทิศทางที่ต้องไป',
@@ -1284,6 +1364,15 @@ const DMV_TESTS = [
   {
     id: 112, test: 12,
     question: 'ป้าย NO PARKING (ห้ามจอด) หมายความว่า:',
+    questionSign: {
+      shape: 'circle-slash',
+      lines: ['NO', 'PARKING'],
+      label: 'No parking sign',
+      fill: '#ffffff',
+      stroke: '#c81e1e',
+      textColor: '#111827',
+      fontSize: 19
+    },
     choices: [
       'ท่านสามารถจอดชั่วคราวได้ไม่เกิน 5 นาที',
       'ห้ามจอดรถในบริเวณนี้ไม่ว่ากรณีใด',
@@ -1295,6 +1384,15 @@ const DMV_TESTS = [
   {
     id: 113, test: 12,
     question: 'ป้ายสี่เหลี่ยมสีน้ำเงินบนฟรีเวย์ หมายความว่า:',
+    questionSign: {
+      shape: 'rectangle',
+      lines: ['GAS', 'FOOD', 'LODGING'],
+      label: 'Blue services sign',
+      fill: '#1d4ed8',
+      stroke: '#1d4ed8',
+      textColor: '#ffffff',
+      fontSize: 22
+    },
     choices: [
       'ป้ายกำหนดความเร็ว',
       'บริการสำหรับนักเดินทาง เช่น ปั๊มน้ำมัน อาหาร หรือโรงแรม',
@@ -1306,6 +1404,15 @@ const DMV_TESTS = [
   {
     id: 114, test: 12,
     question: 'ป้ายสีน้ำตาลบนทางหลวง หมายความว่า:',
+    questionSign: {
+      shape: 'rectangle',
+      lines: ['SCENIC', 'ROUTE'],
+      label: 'Brown scenic route sign',
+      fill: '#7c2d12',
+      stroke: '#7c2d12',
+      textColor: '#ffffff',
+      fontSize: 28
+    },
     choices: [
       'เขตอุตสาหกรรม',
       'สถานที่ท่องเที่ยว อุทยาน หรือสถานที่ประวัติศาสตร์',
@@ -1339,6 +1446,15 @@ const DMV_TESTS = [
   {
     id: 117, test: 12,
     question: 'ป้าย SCHOOL ZONE (เขตโรงเรียน) หมายความว่า:',
+    questionSign: {
+      shape: 'pentagon',
+      lines: ['SCHOOL', 'ZONE'],
+      label: 'School zone sign',
+      fill: '#facc15',
+      stroke: '#111827',
+      textColor: '#111827',
+      fontSize: 22
+    },
     choices: [
       'ขับรถได้ตามความเร็วปกติในทุกเวลา',
       'ลดความเร็วและระวังเป็นพิเศษ ความเร็วสูงสุดในเขตโรงเรียนคือ 25 mph',
@@ -1350,6 +1466,15 @@ const DMV_TESTS = [
   {
     id: 118, test: 12,
     question: 'ป้ายรูปสามเหลี่ยมสีเหลืองที่มีรูปคนเดินสองคน หมายความว่า:',
+    questionSign: {
+      shape: 'diamond',
+      lines: ['PED', 'XING'],
+      label: 'Pedestrian crossing sign',
+      fill: '#facc15',
+      stroke: '#111827',
+      textColor: '#111827',
+      fontSize: 24
+    },
     choices: [
       'มีทางข้ามถนนสำหรับคนเดินเท้าข้างหน้า',
       'ห้ามคนเดินเท้าข้ามถนน',
@@ -1361,6 +1486,15 @@ const DMV_TESTS = [
   {
     id: 119, test: 12,
     question: 'ป้าย ONE WAY พร้อมลูกศร หมายความว่า:',
+    questionSign: {
+      shape: 'rectangle',
+      lines: ['ONE WAY', '→'],
+      label: 'One way sign',
+      fill: '#ffffff',
+      stroke: '#111827',
+      textColor: '#111827',
+      fontSize: 30
+    },
     choices: [
       'ท่านสามารถขับรถไปได้ทั้งสองทิศทาง',
       'การจราจรบนถนนนี้เคลื่อนที่ไปในทิศทางที่ลูกศรชี้เท่านั้น',
