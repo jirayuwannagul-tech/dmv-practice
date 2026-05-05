@@ -315,6 +315,25 @@ a { color: inherit; text-decoration: none; }
   margin-bottom: 28px;
   line-height: 1.6;
 }
+.reference-box {
+  max-width: 880px;
+  width: 100%;
+  background: var(--dmv-white);
+  border: 1px solid var(--dmv-border);
+  border-radius: var(--radius);
+  padding: 12px 16px;
+  font-size: 0.84rem;
+  color: var(--dmv-gray);
+  text-align: center;
+  margin: -12px 0 28px;
+  line-height: 1.55;
+}
+.reference-box a {
+  color: var(--dmv-blue);
+  font-weight: 700;
+  text-decoration: underline;
+  text-underline-offset: 2px;
+}
 
 /* ============================================================
    EXAM PAGE
