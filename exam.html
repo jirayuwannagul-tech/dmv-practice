@@ -1,0 +1,163 @@
+<!DOCTYPE html>
+<html lang="th">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <meta name="description" content="ทำข้อสอบ DMV California ภาษาไทย" />
+  <title>DMV Practice Test — ทำข้อสอบ</title>
+  <link rel="stylesheet" href="assets/css/main.css" />
+</head>
+<body>
+
+  <!-- ═══ HEADER ═══════════════════════════════════════════════ -->
+  <header class="site-header" role="banner">
+    <div class="logo-seal" aria-hidden="true">
+      <span>CA<br>DMV</span>
+    </div>
+    <div class="header-text">
+      <span class="header-title">Department of Motor Vehicles</span>
+      <span class="header-sub">State of California — ชุดข้อสอบภาษาไทย</span>
+    </div>
+  </header>
+
+  <!-- ═══ MAIN ══════════════════════════════════════════════════ -->
+  <main class="page-wrapper" role="main">
+
+    <!-- ─── EXAM AREA ─────────────────────────────────────────── -->
+    <div class="exam-container" id="exam-area">
+
+      <!-- Test header bar -->
+      <div class="exam-header" role="region" aria-label="ข้อมูลชุดข้อสอบ">
+        <div class="exam-header-left">
+          <span class="exam-header-label" id="exam-label">ชุดข้อสอบ</span>
+          <span class="exam-header-title" id="exam-title">ชุดที่ 1</span>
+        </div>
+        <div class="exam-progress" role="status" aria-live="polite">
+          <span class="progress-label" id="progress-label">1 / 10</span>
+          <div class="progress-track" role="progressbar"
+               aria-valuemin="0" aria-valuemax="100"
+               aria-label="ความคืบหน้า">
+            <div class="progress-fill" id="progress-fill" style="width:10%"></div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Question nav dots -->
+      <nav class="question-dots" id="question-dots"
+           aria-label="ข้อที่" role="navigation">
+        <!-- injected by exam.js -->
+      </nav>
+
+      <!-- Question card -->
+      <article class="question-card" aria-label="คำถาม">
+        <div class="question-card-top">
+          <span id="question-num-label">คำถามที่ 1 จาก 10</span>
+          <span style="opacity:.6;font-size:.75rem;">California DMV</span>
+        </div>
+        <div class="question-card-body">
+          <p class="question-text" id="question-text" role="heading" aria-level="2">
+            <!-- injected by exam.js -->
+          </p>
+          <div class="choices-list" id="choices-list" role="radiogroup" aria-labelledby="question-text">
+            <!-- injected by exam.js -->
+          </div>
+        </div>
+      </article>
+
+      <!-- Navigation buttons -->
+      <nav class="exam-nav" aria-label="นำทางข้อสอบ">
+        <button class="btn btn-outline" id="btn-prev"
+                aria-label="ข้อก่อนหน้า" disabled>
+          <svg width="14" height="14" viewBox="0 0 16 16" fill="none" aria-hidden="true">
+            <path d="M10 3L6 8l4 5" stroke="currentColor" stroke-width="1.8"
+                  stroke-linecap="round" stroke-linejoin="round"/>
+          </svg>
+          ย้อนกลับ
+        </button>
+
+        <a href="index.html" class="btn btn-outline" aria-label="กลับหน้าหลัก">
+          <svg width="14" height="14" viewBox="0 0 16 16" fill="none" aria-hidden="true">
+            <path d="M8 2L2 8l6 6M2 8h12" stroke="currentColor" stroke-width="1.8"
+                  stroke-linecap="round" stroke-linejoin="round"/>
+          </svg>
+          หน้าหลัก
+        </a>
+
+        <button class="btn btn-primary" id="btn-next"
+                aria-label="ข้อถัดไป">
+          ถัดไป
+          <svg width="14" height="14" viewBox="0 0 16 16" fill="none" aria-hidden="true">
+            <path d="M6 3l4 5-4 5" stroke="currentColor" stroke-width="1.8"
+                  stroke-linecap="round" stroke-linejoin="round"/>
+          </svg>
+        </button>
+
+        <button class="btn btn-submit" id="btn-submit"
+                style="display:none" aria-label="ส่งข้อสอบ">
+          ส่งข้อสอบ
+          <svg width="14" height="14" viewBox="0 0 16 16" fill="none" aria-hidden="true">
+            <path d="M2 8h12M9 4l5 4-5 4" stroke="currentColor" stroke-width="1.8"
+                  stroke-linecap="round" stroke-linejoin="round"/>
+          </svg>
+        </button>
+      </nav>
+
+    </div><!-- /#exam-area -->
+
+    <!-- ─── SUMMARY AREA ────────────────────────────────────── -->
+    <div id="summary-area" style="display:none; width:100%; max-width:720px;">
+      <div class="summary-card" role="region" aria-label="สรุปผลการสอบ">
+
+        <div class="summary-icon" aria-hidden="true">📋</div>
+        <h2 class="summary-title">สรุปการตอบคำถาม</h2>
+        <p class="summary-subtitle">
+          ชุดที่ <strong id="summary-test-title">1</strong> —
+          ตอบแล้ว <strong id="summary-answered">0</strong> ข้อ
+          / ยังไม่ตอบ <strong id="summary-unanswered">0</strong> ข้อ
+          (จากทั้งหมด <strong id="summary-total">10</strong> ข้อ)
+        </p>
+
+        <table class="summary-table" role="table" aria-label="รายละเอียดคำตอบ">
+          <thead>
+            <tr>
+              <th scope="col" style="width:48px">ข้อ</th>
+              <th scope="col">คำถาม</th>
+              <th scope="col" style="width:180px">คำตอบที่เลือก</th>
+            </tr>
+          </thead>
+          <tbody id="summary-tbody">
+            <!-- injected by exam.js -->
+          </tbody>
+        </table>
+
+        <div class="summary-actions">
+          <button class="btn btn-outline" onclick="retakeExam()" aria-label="ทำใหม่อีกครั้ง">
+            <svg width="14" height="14" viewBox="0 0 16 16" fill="none" aria-hidden="true">
+              <path d="M2 8a6 6 0 1 0 1.5-4M2 4v4h4" stroke="currentColor"
+                    stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/>
+            </svg>
+            ทำใหม่อีกครั้ง
+          </button>
+          <button class="btn btn-primary" onclick="goHome()" aria-label="กลับหน้าหลัก">
+            <svg width="14" height="14" viewBox="0 0 16 16" fill="none" aria-hidden="true">
+              <path d="M2 8l6-6 6 6M4 6v7h3v-4h2v4h3V6" stroke="currentColor"
+                    stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/>
+            </svg>
+            กลับหน้าหลัก
+          </button>
+        </div>
+
+      </div>
+    </div><!-- /#summary-area -->
+
+  </main>
+
+  <!-- ═══ FOOTER ════════════════════════════════════════════════ -->
+  <footer class="site-footer" role="contentinfo">
+    California DMV Written Test Practice — ภาษาไทย &nbsp;|&nbsp; ข้อมูลอ้างอิงจาก California Driver Handbook
+  </footer>
+
+  <script src="assets/js/data.js"></script>
+  <script src="assets/js/exam.js"></script>
+</body>
+</html>

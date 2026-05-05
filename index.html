@@ -1,0 +1,76 @@
+<!DOCTYPE html>
+<html lang="th">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <meta name="description" content="ซ้อมสอบใบขับขี่ California DMV ภาษาไทย 120 ข้อ แบ่งเป็น 12 ชุด ชุดละ 10 ข้อ" />
+  <title>DMV Practice Test — ซ้อมสอบใบขับขี่ภาษาไทย</title>
+  <link rel="stylesheet" href="assets/css/main.css" />
+</head>
+<body>
+
+  <!-- ═══ HEADER ═══════════════════════════════════════════════ -->
+  <header class="site-header" role="banner">
+    <div class="logo-seal" aria-hidden="true">
+      <span>CA<br>DMV</span>
+    </div>
+    <div class="header-text">
+      <span class="header-title">Department of Motor Vehicles</span>
+      <span class="header-sub">State of California — ชุดข้อสอบภาษาไทย</span>
+    </div>
+  </header>
+
+  <!-- ═══ MAIN ══════════════════════════════════════════════════ -->
+  <main class="page-wrapper" role="main">
+
+    <section class="home-hero" aria-labelledby="hero-heading">
+      <h1 id="hero-heading">ซ้อมสอบใบขับขี่ California</h1>
+      <p>ข้อสอบภาษาไทย จำนวน 120 ข้อ แบ่งเป็น 12 ชุด ชุดละ 10 ข้อ<br>
+         เลือกชุดที่ต้องการด้านล่าง แล้วกด <strong>เริ่มสอบ</strong></p>
+    </section>
+
+    <div class="home-info-bar" role="list">
+      <div class="info-chip" role="listitem">
+        <svg width="14" height="14" viewBox="0 0 16 16" fill="none" aria-hidden="true">
+          <path d="M8 1a7 7 0 1 0 0 14A7 7 0 0 0 8 1zm0 3v4.5l3 1.5" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/>
+        </svg>
+        <strong>120 ข้อ</strong> รวมทั้งหมด
+      </div>
+      <div class="info-chip" role="listitem">
+        <svg width="14" height="14" viewBox="0 0 16 16" fill="none" aria-hidden="true">
+          <rect x="2" y="3" width="12" height="10" rx="1.5" stroke="currentColor" stroke-width="1.5"/>
+          <path d="M5 7h6M5 10h4" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/>
+        </svg>
+        <strong>12 ชุด</strong> ๆ ละ 10 ข้อ
+      </div>
+      <div class="info-chip" role="listitem">
+        <svg width="14" height="14" viewBox="0 0 16 16" fill="none" aria-hidden="true">
+          <path d="M2 13l4-4 3 3 5-7" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
+        </svg>
+        ข้อสอบ <strong>เกณฑ์ผ่าน 83%</strong>
+      </div>
+    </div>
+
+    <div class="notice-box" role="note">
+      <strong>คำแนะนำ:</strong> โปรดศึกษา
+      <em>คู่มือผู้ขับขี่ยานยนต์ของรัฐแคลิฟอร์เนีย</em> ก่อนทำการทดสอบ
+      แต่ละคำถามจะมีคำตอบให้เลือกสามข้อ เลือกคำตอบที่ถูกต้องที่สุดเพียงหนึ่งข้อ
+    </div>
+
+    <p class="test-grid-title" id="grid-heading">เลือกชุดข้อสอบ</p>
+
+    <div class="test-grid" id="test-grid" role="list" aria-labelledby="grid-heading">
+      <!-- cards injected by home.js -->
+    </div>
+
+  </main>
+
+  <!-- ═══ FOOTER ════════════════════════════════════════════════ -->
+  <footer class="site-footer" role="contentinfo">
+    California DMV Written Test Practice — ภาษาไทย &nbsp;|&nbsp; ข้อมูลอ้างอิงจาก California Driver Handbook
+  </footer>
+
+  <script src="assets/js/data.js"></script>
+  <script src="assets/js/home.js"></script>
+</body>
+</html>
