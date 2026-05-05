@@ -105,13 +105,15 @@
     </div><!-- /#exam-area -->
 
     <!-- ─── SUMMARY AREA ────────────────────────────────────── -->
-    <div id="summary-area" style="display:none; width:100%; max-width:720px;">
+    <div id="summary-area" style="display:none; width:100%; max-width:960px;">
       <div class="summary-card" role="region" aria-label="สรุปผลการสอบ">
 
         <div class="summary-icon" aria-hidden="true">📋</div>
         <h2 class="summary-title">สรุปการตอบคำถาม</h2>
         <p class="summary-subtitle">
           ชุดที่ <strong id="summary-test-title">1</strong> —
+          คะแนน <strong id="summary-score">0</strong>/<strong id="summary-total-score">10</strong>
+          |
           ตอบแล้ว <strong id="summary-answered">0</strong> ข้อ
           / ยังไม่ตอบ <strong id="summary-unanswered">0</strong> ข้อ
           (จากทั้งหมด <strong id="summary-total">10</strong> ข้อ)
@@ -123,6 +125,8 @@
               <th scope="col" style="width:48px">ข้อ</th>
               <th scope="col">คำถาม</th>
               <th scope="col" style="width:180px">คำตอบที่เลือก</th>
+              <th scope="col" style="width:180px">เฉลย</th>
+              <th scope="col" style="width:80px">ผล</th>
             </tr>
           </thead>
           <tbody id="summary-tbody">

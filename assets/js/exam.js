@@ -174,9 +174,14 @@ function showSummary() {
   const total      = questions.length;
   const answered   = Object.keys(answers).length;
   const unanswered = total - answered;
+  const score      = questions.reduce((sum, q) => {
+    return sum + (answers[q.id] === q.answer ? 1 : 0);
+  }, 0);
 
   document.getElementById('summary-test-title').textContent = `ชุดที่ ${testNumber}`;
   document.getElementById('summary-total').textContent      = total;
+  document.getElementById('summary-total-score').textContent = total;
+  document.getElementById('summary-score').textContent      = score;
   document.getElementById('summary-answered').textContent   = answered;
   document.getElementById('summary-unanswered').textContent = unanswered;
 
@@ -186,15 +191,24 @@ function showSummary() {
   questions.forEach((q, i) => {
     const tr = document.createElement('tr');
     const hasAnswer = answers[q.id] !== undefined;
+    const isCorrect = hasAnswer && answers[q.id] === q.answer;
+    const selectedText = hasAnswer ? q.choices[answers[q.id]] : 'ยังไม่ตอบ';
+    const correctText = q.choices[q.answer];
 
     tr.innerHTML = `
       <td>${i + 1}</td>
       <td>${truncate(q.question, 55)}</td>
       <td>
         ${hasAnswer
-          ? `<span class="badge-answered">${q.choices[answers[q.id]]}</span>`
+          ? `<span class="badge-answered">${selectedText}</span>`
           : '<span class="badge-skipped">ยังไม่ตอบ</span>'
         }
+      </td>
+      <td><span class="badge-answer">${correctText}</span></td>
+      <td>
+        <span class="${isCorrect ? 'badge-correct' : 'badge-incorrect'}">
+          ${isCorrect ? 'ถูก' : 'ผิด'}
+        </span>
       </td>
     `;
     tbody.appendChild(tr);
