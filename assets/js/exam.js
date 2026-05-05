@@ -193,7 +193,7 @@ function showSummary() {
     const hasAnswer = answers[q.id] !== undefined;
     const isCorrect = hasAnswer && answers[q.id] === q.answer;
     const selectedText = hasAnswer ? q.choices[answers[q.id]] : 'ยังไม่ตอบ';
-    const correctText = q.choices[q.answer];
+    const correctText = q.answerText || q.choices[q.answer];
 
     tr.innerHTML = `
       <td>${i + 1}</td>
