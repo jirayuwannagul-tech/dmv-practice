@@ -959,28 +959,37 @@
            voices[0] || null;
   }
 
-  function getSectionText(heading) {
-    const headingClass = heading.className;
-    const isMain  = headingClass.includes('hb-section-title');
-    const isSub   = headingClass.includes('hb-sub') && !headingClass.includes('hb-sub2');
-    const isSub2  = headingClass.includes('hb-sub2');
+  function getHeadingText(heading) {
+    // ดึงเฉพาะ text node ตรงๆ ไม่รวม button emoji
+    let t = '';
+    heading.childNodes.forEach(n => {
+      if (n.nodeType === Node.TEXT_NODE) t += n.textContent;
+    });
+    return t.trim();
+  }
 
-    let parts = [heading.textContent.trim()];
+  function getSectionText(heading) {
+    const cls = heading.className;
+    const isMain = cls.includes('hb-section-title');
+    const isSub  = cls.includes('hb-sub') && !cls.includes('hb-sub2');
+    // hb-sub2 = leaf level — stops at any sibling heading
+
+    let parts = [getHeadingText(heading)];
     let el = heading.nextElementSibling;
 
     while (el) {
-      const cls = el.className || '';
-      const isNextMain  = cls.includes('hb-section-title');
-      const isNextSub   = cls.includes('hb-sub') && !cls.includes('hb-sub2');
-      const isNextSub2  = cls.includes('hb-sub2');
-      const isDivider   = el.tagName === 'HR';
+      const ec = el.className || '';
+      const isHR    = el.tagName === 'HR';
+      const nextMain = ec.includes('hb-section-title');
+      const nextSub  = ec.includes('hb-sub') && !ec.includes('hb-sub2');
+      const nextSub2 = ec.includes('hb-sub2');
 
-      if (isDivider) break;
-      if (isMain)  break;
-      if (isSub   && (isNextMain || isNextSub))  break;
-      if (isSub2  && (isNextMain || isNextSub || isNextSub2)) break;
+      if (isHR || nextMain) break;
+      if (isMain)  { /* section title reads until next section */ }
+      else if (isSub  && nextSub)  break;
+      else if (!isSub && (nextSub || nextSub2)) break;
 
-      const text = el.textContent.trim().replace(/\s+/g, ' ');
+      const text = el.textContent.replace(/\s+/g, ' ').trim();
       if (text) parts.push(text);
       el = el.nextElementSibling;
     }
@@ -1015,8 +1024,7 @@
   }
 
   function addButtons() {
-    const selectors = '.hb-section-title, .hb-sub, .hb-sub2';
-    document.querySelectorAll(selectors).forEach(heading => {
+    document.querySelectorAll('.hb-section-title, .hb-sub, .hb-sub2').forEach(heading => {
       const btn = document.createElement('button');
       btn.textContent = '🔊';
       btn.title = 'อ่านออกเสียง';
@@ -1028,7 +1036,7 @@
       ].join(';');
       btn.addEventListener('mouseenter', () => btn.style.opacity = '1');
       btn.addEventListener('mouseleave', () => btn.style.opacity = currentBtn === btn ? '1' : '0.6');
-      btn.addEventListener('click', (e) => {
+      btn.addEventListener('click', e => {
         e.stopPropagation();
         speak(getSectionText(heading), btn);
       });
@@ -1036,9 +1044,8 @@
     });
   }
 
-  if (synth.getVoices().length) {
-    addButtons();
-  } else {
+  if (synth.getVoices().length) addButtons();
+  else {
     synth.addEventListener('voiceschanged', addButtons, { once: true });
     setTimeout(addButtons, 500);
   }
