@@ -946,5 +946,103 @@
   </div>
 
 </main>
+
+<script>
+(function () {
+  const synth = window.speechSynthesis;
+  let currentBtn = null;
+
+  function getThaiVoice() {
+    const voices = synth.getVoices();
+    return voices.find(v => v.lang.startsWith('th')) ||
+           voices.find(v => v.lang.startsWith('en')) ||
+           voices[0] || null;
+  }
+
+  function getSectionText(heading) {
+    const headingClass = heading.className;
+    const isMain  = headingClass.includes('hb-section-title');
+    const isSub   = headingClass.includes('hb-sub') && !headingClass.includes('hb-sub2');
+    const isSub2  = headingClass.includes('hb-sub2');
+
+    let parts = [heading.textContent.trim()];
+    let el = heading.nextElementSibling;
+
+    while (el) {
+      const cls = el.className || '';
+      const isNextMain  = cls.includes('hb-section-title');
+      const isNextSub   = cls.includes('hb-sub') && !cls.includes('hb-sub2');
+      const isNextSub2  = cls.includes('hb-sub2');
+      const isDivider   = el.tagName === 'HR';
+
+      if (isDivider) break;
+      if (isMain)  break;
+      if (isSub   && (isNextMain || isNextSub))  break;
+      if (isSub2  && (isNextMain || isNextSub || isNextSub2)) break;
+
+      const text = el.textContent.trim().replace(/\s+/g, ' ');
+      if (text) parts.push(text);
+      el = el.nextElementSibling;
+    }
+    return parts.join(' ');
+  }
+
+  function speak(text, btn) {
+    if (synth.speaking) {
+      synth.cancel();
+      if (currentBtn) {
+        currentBtn.textContent = '🔊';
+        currentBtn.title = 'อ่านออกเสียง';
+      }
+      if (currentBtn === btn) { currentBtn = null; return; }
+    }
+
+    const utt = new SpeechSynthesisUtterance(text);
+    utt.voice = getThaiVoice();
+    utt.lang  = 'th-TH';
+    utt.rate  = 0.9;
+
+    btn.textContent = '⏹';
+    btn.title = 'หยุด';
+    currentBtn = btn;
+
+    utt.onend = utt.onerror = () => {
+      btn.textContent = '🔊';
+      btn.title = 'อ่านออกเสียง';
+      currentBtn = null;
+    };
+    synth.speak(utt);
+  }
+
+  function addButtons() {
+    const selectors = '.hb-section-title, .hb-sub, .hb-sub2';
+    document.querySelectorAll(selectors).forEach(heading => {
+      const btn = document.createElement('button');
+      btn.textContent = '🔊';
+      btn.title = 'อ่านออกเสียง';
+      btn.style.cssText = [
+        'background:none', 'border:1px solid #cbd5e1', 'border-radius:6px',
+        'cursor:pointer', 'font-size:0.85rem', 'padding:2px 6px',
+        'margin-left:8px', 'vertical-align:middle', 'opacity:0.6',
+        'transition:opacity .15s'
+      ].join(';');
+      btn.addEventListener('mouseenter', () => btn.style.opacity = '1');
+      btn.addEventListener('mouseleave', () => btn.style.opacity = currentBtn === btn ? '1' : '0.6');
+      btn.addEventListener('click', (e) => {
+        e.stopPropagation();
+        speak(getSectionText(heading), btn);
+      });
+      heading.appendChild(btn);
+    });
+  }
+
+  if (synth.getVoices().length) {
+    addButtons();
+  } else {
+    synth.addEventListener('voiceschanged', addButtons, { once: true });
+    setTimeout(addButtons, 500);
+  }
+})();
+</script>
 </body>
 </html>
