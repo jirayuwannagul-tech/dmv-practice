@@ -320,7 +320,8 @@
     <span class="tts-bar-label">เสียง</span>
     <div class="tts-speed-group" role="group" aria-label="ความเร็ว">
       <button class="tts-speed-btn" data-rate="0.75">0.75×</button>
-      <button class="tts-speed-btn active" data-rate="0.9">1×</button>
+      <button class="tts-speed-btn" data-rate="1">1×</button>
+      <button class="tts-speed-btn active" data-rate="1.1">1.1×</button>
       <button class="tts-speed-btn" data-rate="1.25">1.25×</button>
       <button class="tts-speed-btn" data-rate="1.5">1.5×</button>
       <button class="tts-speed-btn" data-rate="2">2×</button>
@@ -1052,7 +1053,7 @@
 (function () {
   const synth = window.speechSynthesis;
   let currentBtn  = null;
-  let ttsRate     = 0.9;
+  let ttsRate     = 1.1;
   let readAllMode = false;
   let allQueue    = [];
   let allBtn      = null;
@@ -1181,6 +1182,7 @@
   }
 
   // Chains an array of text chunks, managing btn UI around the whole sequence.
+  // Adds a breathing pause between chunks: longer after the heading (idx 0).
   function speakChunks(chunks, btn, onDone) {
     const myGen = generation;
     if (btn) { btn.textContent = '⏹'; btn.title = 'หยุด'; currentBtn = btn; }
@@ -1196,7 +1198,13 @@
         if (onDone) onDone();
         return;
       }
-      speakChunk(chunks[i++], myGen, nextChunk);
+      const idx = i++;
+      speakChunk(chunks[idx], myGen, () => {
+        if (generation !== myGen) return;
+        // pause after heading = 500ms, between regular chunks = 120ms
+        const delay = idx === 0 ? 500 : 120;
+        setTimeout(nextChunk, delay);
+      });
     }
     nextChunk();
   }
@@ -1231,7 +1239,10 @@
     const heading = allQueue.shift();
     setStatus('กำลังอ่าน: ' + getHeadingText(heading));
     heading.scrollIntoView({ behavior: 'smooth', block: 'start' });
-    speakChunks(getSectionChunks(heading), null, readNextInQueue);
+    // pause 700ms between sections so the listener can breathe
+    speakChunks(getSectionChunks(heading), null, () => {
+      setTimeout(readNextInQueue, 700);
+    });
   }
 
   function setStatus(text) {
