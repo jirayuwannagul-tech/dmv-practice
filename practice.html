@@ -1,0 +1,141 @@
+<!DOCTYPE html>
+<html lang="th">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <meta name="description" content="ฝึกซ้อม 190 ข้อ — สุ่มคำถามทั้งหมด พร้อมเฉลยทันที" />
+  <title>DMV — ฝึกซ้อม 190 ข้อ</title>
+  <link rel="stylesheet" href="assets/css/main.css" />
+</head>
+<body>
+
+  <header class="site-header" role="banner">
+    <div class="logo-seal" aria-hidden="true">
+      <span>CA<br>DMV</span>
+    </div>
+    <div class="header-text">
+      <span class="header-title">Department of Motor Vehicles</span>
+      <span class="header-sub">State of California — ชุดข้อสอบภาษาไทย</span>
+    </div>
+  </header>
+
+  <main class="page-wrapper" role="main">
+
+    <!-- ─── EXAM AREA ──────────────────────────────────────────── -->
+    <div class="exam-container" id="exam-area">
+
+      <div class="exam-header" role="region" aria-label="ข้อมูลการฝึกซ้อม">
+        <div class="exam-header-left">
+          <span class="exam-header-label">ฝึกซ้อม</span>
+          <span class="exam-header-title" id="exam-title">190 ข้อ</span>
+        </div>
+        <div class="exam-progress" role="status" aria-live="polite">
+          <span class="progress-label" id="progress-label">1 / 190</span>
+          <div class="progress-track" role="progressbar"
+               aria-valuemin="0" aria-valuemax="100"
+               aria-label="ความคืบหน้า">
+            <div class="progress-fill" id="progress-fill" style="width:1%"></div>
+          </div>
+        </div>
+      </div>
+
+      <nav class="question-dots" id="question-dots"
+           aria-label="ข้อที่" role="navigation">
+      </nav>
+
+      <article class="question-card" aria-label="คำถาม">
+        <div class="question-card-top">
+          <span id="question-num-label">คำถามที่ 1 จาก 190</span>
+          <span id="score-label" style="font-size:.82rem;font-weight:600;color:var(--dmv-green);">ถูก 0 | ผิด 0</span>
+        </div>
+        <div class="question-card-body">
+          <p class="question-text" id="question-text" role="heading" aria-level="2"></p>
+          <div class="question-media" id="question-media" aria-hidden="true"></div>
+          <div class="choices-list" id="choices-list" role="radiogroup" aria-labelledby="question-text"></div>
+          <div id="feedback-box" class="practice-feedback" style="display:none;" aria-live="assertive"></div>
+        </div>
+      </article>
+
+      <nav class="exam-nav" aria-label="นำทางข้อสอบ">
+        <a href="index.html" class="btn btn-outline" aria-label="กลับหน้าหลัก">
+          <svg width="14" height="14" viewBox="0 0 16 16" fill="none" aria-hidden="true">
+            <path d="M2 8l6-6 6 6M4 6v7h3v-4h2v4h3V6" stroke="currentColor" stroke-width="1.8"
+                  stroke-linecap="round" stroke-linejoin="round"/>
+          </svg>
+          หน้าหลัก
+        </a>
+        <button class="btn btn-primary" id="btn-next" style="display:none;" onclick="nextQuestion()">
+          ถัดไป
+          <svg width="14" height="14" viewBox="0 0 16 16" fill="none" aria-hidden="true">
+            <path d="M6 3l4 5-4 5" stroke="currentColor" stroke-width="1.8"
+                  stroke-linecap="round" stroke-linejoin="round"/>
+          </svg>
+        </button>
+        <button class="btn btn-submit" id="btn-finish" style="display:none;" onclick="showSummary()">
+          ดูผลสรุป
+          <svg width="14" height="14" viewBox="0 0 16 16" fill="none" aria-hidden="true">
+            <path d="M2 8h12M9 4l5 4-5 4" stroke="currentColor" stroke-width="1.8"
+                  stroke-linecap="round" stroke-linejoin="round"/>
+          </svg>
+        </button>
+      </nav>
+
+    </div>
+
+    <!-- ─── SUMMARY AREA ───────────────────────────────────────── -->
+    <div id="summary-area" style="display:none; width:100%; max-width:960px;">
+      <div class="summary-card" role="region" aria-label="สรุปผลการฝึกซ้อม">
+        <div class="summary-icon" aria-hidden="true">📋</div>
+        <h2 class="summary-title">สรุปการฝึกซ้อม 190 ข้อ</h2>
+        <p class="summary-subtitle">
+          คะแนน <strong id="summary-score">0</strong>/<strong id="summary-total-score">190</strong>
+          &nbsp;|&nbsp;
+          ถูก <strong id="summary-correct">0</strong> ข้อ
+          &nbsp;/&nbsp;
+          ผิด <strong id="summary-wrong">0</strong> ข้อ
+          &nbsp;/&nbsp;
+          ไม่ตอบ <strong id="summary-skipped">0</strong> ข้อ
+        </p>
+
+        <table class="summary-table" role="table" aria-label="รายละเอียดคำตอบ">
+          <thead>
+            <tr>
+              <th scope="col" style="width:48px">ข้อ</th>
+              <th scope="col">คำถาม</th>
+              <th scope="col" style="width:180px">คำตอบที่เลือก</th>
+              <th scope="col" style="width:180px">เฉลย</th>
+              <th scope="col" style="width:80px">ผล</th>
+            </tr>
+          </thead>
+          <tbody id="summary-tbody"></tbody>
+        </table>
+
+        <div class="summary-actions">
+          <button class="btn btn-outline" onclick="restartPractice()">
+            <svg width="14" height="14" viewBox="0 0 16 16" fill="none" aria-hidden="true">
+              <path d="M2 8a6 6 0 1 0 1.5-4M2 4v4h4" stroke="currentColor"
+                    stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/>
+            </svg>
+            เริ่มใหม่
+          </button>
+          <button class="btn btn-primary" onclick="window.location.href='index.html'">
+            <svg width="14" height="14" viewBox="0 0 16 16" fill="none" aria-hidden="true">
+              <path d="M2 8l6-6 6 6M4 6v7h3v-4h2v4h3V6" stroke="currentColor"
+                    stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/>
+            </svg>
+            กลับหน้าหลัก
+          </button>
+        </div>
+      </div>
+    </div>
+
+  </main>
+
+  <footer class="site-footer" role="contentinfo">
+    California DMV Written Test Practice — ภาษาไทย &nbsp;|&nbsp; ข้อมูลอ้างอิงจาก California Driver Handbook
+  </footer>
+
+  <script src="assets/js/data.js"></script>
+  <script src="assets/js/practice.js"></script>
+</body>
+</html>
