@@ -1092,12 +1092,14 @@
     return t.trim();
   }
 
-  function getSectionText(heading) {
+  // Returns array of short text chunks (one per DOM element) instead of one big string.
+  // Smaller chunks = speed changes apply within the next 1-2 seconds.
+  function getSectionChunks(heading) {
     const cls    = heading.className;
     const isMain = cls.includes('hb-section-title');
     const isSub  = cls.includes('hb-sub') && !cls.includes('hb-sub2');
 
-    let parts = [getHeadingText(heading)];
+    const chunks = [getHeadingText(heading)];
     let el = heading.nextElementSibling;
 
     while (el) {
@@ -1112,18 +1114,24 @@
         if (!isSub && (nextSub || nextSub2)) break;
       }
 
-      const text = getCleanText(el).replace(/\s+/g, ' ').trim();
-      if (text) parts.push(text);
+      // Expand lists into one chunk per item for finer granularity
+      if (el.tagName === 'UL' || el.tagName === 'OL') {
+        el.querySelectorAll('li').forEach(li => {
+          const t = getCleanText(li).replace(/\s+/g, ' ').trim();
+          if (t) chunks.push(t);
+        });
+      } else {
+        const t = getCleanText(el).replace(/\s+/g, ' ').trim();
+        if (t) chunks.push(t);
+      }
       el = el.nextElementSibling;
     }
-    return parts.join(' ');
+    return chunks.filter(c => c.length > 0);
   }
 
   /* ── Split text into Thai / English segments ──────────────── */
   function splitByLanguage(text) {
     const segments = [];
-    // English run: starts with a letter, may include letters/digits/hyphens/apostrophes,
-    // followed by more space-separated English words.
     const re = /([a-zA-Z][a-zA-Z0-9\-.']*(?:\s+[a-zA-Z][a-zA-Z0-9\-.']*)*)|([^a-zA-Z]+)/g;
     let m;
     while ((m = re.exec(text)) !== null) {
@@ -1151,18 +1159,35 @@
     setStatus('');
   }
 
-  /* ── Speak with Thai/English voice switching ──────────────── */
-  function speakMixed(text, btn, onDone) {
-    const myGen    = generation;
+  // Speaks one short text chunk with Thai/English voice switching.
+  // Does NOT manage btn state — callers handle that.
+  function speakChunk(text, myGen, onDone) {
     const segments = splitByLanguage(text);
-    if (!segments.length) { if (onDone) onDone(); return; }
-
-    if (btn) { btn.textContent = '⏹'; btn.title = 'หยุด'; currentBtn = btn; }
-
+    if (!segments.length) { onDone(); return; }
     let i = 0;
     function next() {
-      if (generation !== myGen) return;  // cancelled
-      if (i >= segments.length) {
+      if (generation !== myGen) return;
+      if (i >= segments.length) { onDone(); return; }
+      const seg = segments[i++];
+      const utt = new SpeechSynthesisUtterance(seg.text);
+      utt.voice = getVoice(seg.lang);
+      utt.lang  = seg.lang;
+      utt.rate  = ttsRate;  // picked up fresh each chunk — rate change is instant
+      utt.onend   = next;
+      utt.onerror = () => { if (generation === myGen) next(); };
+      synth.speak(utt);
+    }
+    next();
+  }
+
+  // Chains an array of text chunks, managing btn UI around the whole sequence.
+  function speakChunks(chunks, btn, onDone) {
+    const myGen = generation;
+    if (btn) { btn.textContent = '⏹'; btn.title = 'หยุด'; currentBtn = btn; }
+    let i = 0;
+    function nextChunk() {
+      if (generation !== myGen) return;
+      if (i >= chunks.length) {
         if (btn) {
           btn.textContent = '🔊';
           btn.title = 'อ่านออกเสียง';
@@ -1171,16 +1196,9 @@
         if (onDone) onDone();
         return;
       }
-      const seg = segments[i++];
-      const utt = new SpeechSynthesisUtterance(seg.text);
-      utt.voice = getVoice(seg.lang);
-      utt.lang  = seg.lang;
-      utt.rate  = ttsRate;
-      utt.onend   = next;
-      utt.onerror = () => { if (generation === myGen) next(); };
-      synth.speak(utt);
+      speakChunk(chunks[i++], myGen, nextChunk);
     }
-    next();
+    nextChunk();
   }
 
   /* ── Section button click ─────────────────────────────────── */
@@ -1189,9 +1207,9 @@
     if (synth.speaking) {
       const wasBtn = currentBtn;
       stopAll();
-      if (wasBtn === btn) return;  // toggle off
+      if (wasBtn === btn) return;
     }
-    speakMixed(getSectionText(heading), btn);
+    speakChunks(getSectionChunks(heading), btn);
   }
 
   /* ── Read all ─────────────────────────────────────────────── */
@@ -1213,7 +1231,7 @@
     const heading = allQueue.shift();
     setStatus('กำลังอ่าน: ' + getHeadingText(heading));
     heading.scrollIntoView({ behavior: 'smooth', block: 'start' });
-    speakMixed(getSectionText(heading), null, readNextInQueue);
+    speakChunks(getSectionChunks(heading), null, readNextInQueue);
   }
 
   function setStatus(text) {
@@ -1228,9 +1246,7 @@
         ttsRate = parseFloat(btn.dataset.rate);
         document.querySelectorAll('.tts-speed-btn').forEach(b => b.classList.remove('active'));
         btn.classList.add('active');
-        if (synth.speaking && currentBtn && !readAllMode) {
-          stopAll();
-        }
+        // ttsRate is read fresh at each chunk boundary — no restart needed
       });
     });
     document.getElementById('tts-all-btn').addEventListener('click', startReadAll);
