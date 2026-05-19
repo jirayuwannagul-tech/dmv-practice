@@ -1051,21 +1051,39 @@
 <script>
 (function () {
   const synth = window.speechSynthesis;
-  let currentBtn  = null;   // section button currently reading
-  let ttsRate     = 0.9;    // current speed
-  let readAllMode = false;  // true while "read all" is running
-  let allQueue    = [];     // remaining headings for read-all
+  let currentBtn  = null;
+  let ttsRate     = 0.9;
+  let readAllMode = false;
+  let allQueue    = [];
   let allBtn      = null;
+  let generation  = 0;  // incremented on stopAll() to cancel in-flight chains
 
-  /* ── Voice ────────────────────────────────────────────────── */
-  function getThaiVoice() {
+  /* ── Voices ───────────────────────────────────────────────── */
+  function getVoice(lang) {
     const voices = synth.getVoices();
+    if (lang === 'en-US') {
+      return voices.find(v => v.lang === 'en-US') ||
+             voices.find(v => v.lang.startsWith('en')) ||
+             voices[0] || null;
+    }
     return voices.find(v => v.lang.startsWith('th')) ||
            voices.find(v => v.lang.startsWith('en')) ||
            voices[0] || null;
   }
 
-  /* ── Text extraction ──────────────────────────────────────── */
+  /* ── Text extraction (skips <button> elements) ────────────── */
+  function getCleanText(el) {
+    let t = '';
+    el.childNodes.forEach(n => {
+      if (n.nodeType === Node.TEXT_NODE) {
+        t += n.textContent;
+      } else if (n.nodeType === Node.ELEMENT_NODE && n.tagName !== 'BUTTON') {
+        t += getCleanText(n);
+      }
+    });
+    return t;
+  }
+
   function getHeadingText(heading) {
     let t = '';
     heading.childNodes.forEach(n => {
@@ -1083,7 +1101,7 @@
     let el = heading.nextElementSibling;
 
     while (el) {
-      const ec      = el.className || '';
+      const ec       = el.className || '';
       const nextMain = ec.includes('hb-section-title');
       const nextSub  = ec.includes('hb-sub') && !ec.includes('hb-sub2');
       const nextSub2 = ec.includes('hb-sub2');
@@ -1094,15 +1112,30 @@
         if (!isSub && (nextSub || nextSub2)) break;
       }
 
-      const text = el.textContent.replace(/\s+/g, ' ').trim();
+      const text = getCleanText(el).replace(/\s+/g, ' ').trim();
       if (text) parts.push(text);
       el = el.nextElementSibling;
     }
     return parts.join(' ');
   }
 
-  /* ── Stop all ─────────────────────────────────────────────── */
+  /* ── Split text into Thai / English segments ──────────────── */
+  function splitByLanguage(text) {
+    const segments = [];
+    // English run: starts with a letter, may include letters/digits/hyphens/apostrophes,
+    // followed by more space-separated English words.
+    const re = /([a-zA-Z][a-zA-Z0-9\-.']*(?:\s+[a-zA-Z][a-zA-Z0-9\-.']*)*)|([^a-zA-Z]+)/g;
+    let m;
+    while ((m = re.exec(text)) !== null) {
+      if (m[1] && m[1].trim()) segments.push({ text: m[1].trim(), lang: 'en-US' });
+      else if (m[2] && m[2].trim()) segments.push({ text: m[2].trim(), lang: 'th-TH' });
+    }
+    return segments;
+  }
+
+  /* ── Stop everything ──────────────────────────────────────── */
   function stopAll() {
+    generation++;
     readAllMode = false;
     allQueue    = [];
     synth.cancel();
@@ -1118,51 +1151,47 @@
     setStatus('');
   }
 
-  /* ── Speak single utterance ───────────────────────────────── */
-  function speak(text, btn, onDone) {
-    const utt   = new SpeechSynthesisUtterance(text);
-    utt.voice   = getThaiVoice();
-    utt.lang    = 'th-TH';
-    utt.rate    = ttsRate;
+  /* ── Speak with Thai/English voice switching ──────────────── */
+  function speakMixed(text, btn, onDone) {
+    const myGen    = generation;
+    const segments = splitByLanguage(text);
+    if (!segments.length) { if (onDone) onDone(); return; }
 
-    if (btn) {
-      btn.textContent = '⏹';
-      btn.title = 'หยุด';
-      currentBtn = btn;
+    if (btn) { btn.textContent = '⏹'; btn.title = 'หยุด'; currentBtn = btn; }
+
+    let i = 0;
+    function next() {
+      if (generation !== myGen) return;  // cancelled
+      if (i >= segments.length) {
+        if (btn) {
+          btn.textContent = '🔊';
+          btn.title = 'อ่านออกเสียง';
+          if (currentBtn === btn) currentBtn = null;
+        }
+        if (onDone) onDone();
+        return;
+      }
+      const seg = segments[i++];
+      const utt = new SpeechSynthesisUtterance(seg.text);
+      utt.voice = getVoice(seg.lang);
+      utt.lang  = seg.lang;
+      utt.rate  = ttsRate;
+      utt.onend   = next;
+      utt.onerror = () => { if (generation === myGen) next(); };
+      synth.speak(utt);
     }
-
-    utt.onend = () => {
-      if (btn) {
-        btn.textContent = '🔊';
-        btn.title = 'อ่านออกเสียง';
-        if (currentBtn === btn) currentBtn = null;
-      }
-      if (onDone) onDone();
-    };
-    utt.onerror = () => {
-      if (btn) {
-        btn.textContent = '🔊';
-        btn.title = 'อ่านออกเสียง';
-        if (currentBtn === btn) currentBtn = null;
-      }
-      if (onDone) onDone();
-    };
-
-    synth.speak(utt);
+    next();
   }
 
   /* ── Section button click ─────────────────────────────────── */
   function sectionSpeak(heading, btn) {
     if (readAllMode) { stopAll(); return; }
     if (synth.speaking) {
-      synth.cancel();
-      if (currentBtn) {
-        currentBtn.textContent = '🔊';
-        currentBtn.title = 'อ่านออกเสียง';
-      }
-      if (currentBtn === btn) { currentBtn = null; return; }
+      const wasBtn = currentBtn;
+      stopAll();
+      if (wasBtn === btn) return;  // toggle off
     }
-    speak(getSectionText(heading), btn);
+    speakMixed(getSectionText(heading), btn);
   }
 
   /* ── Read all ─────────────────────────────────────────────── */
@@ -1180,15 +1209,11 @@
   }
 
   function readNextInQueue() {
-    if (!readAllMode || allQueue.length === 0) {
-      stopAll();
-      return;
-    }
+    if (!readAllMode || allQueue.length === 0) { stopAll(); return; }
     const heading = allQueue.shift();
-    const label   = getHeadingText(heading);
-    setStatus('กำลังอ่าน: ' + label);
+    setStatus('กำลังอ่าน: ' + getHeadingText(heading));
     heading.scrollIntoView({ behavior: 'smooth', block: 'start' });
-    speak(getSectionText(heading), null, readNextInQueue);
+    speakMixed(getSectionText(heading), null, readNextInQueue);
   }
 
   function setStatus(text) {
@@ -1203,23 +1228,17 @@
         ttsRate = parseFloat(btn.dataset.rate);
         document.querySelectorAll('.tts-speed-btn').forEach(b => b.classList.remove('active'));
         btn.classList.add('active');
-        // restart current section reading at new speed
         if (synth.speaking && currentBtn && !readAllMode) {
-          synth.cancel();
-          currentBtn.textContent = '🔊';
-          currentBtn.title = 'อ่านออกเสียง';
-          currentBtn = null;
+          stopAll();
         }
       });
     });
-
     document.getElementById('tts-all-btn').addEventListener('click', startReadAll);
   }
 
   /* ── Section buttons ──────────────────────────────────────── */
   function addButtons() {
     initSpeedButtons();
-
     document.querySelectorAll('.hb-section-title, .hb-sub, .hb-sub2').forEach(heading => {
       const btn = document.createElement('button');
       btn.textContent = '🔊';
