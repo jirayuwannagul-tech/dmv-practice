@@ -876,6 +876,40 @@ a { color: inherit; text-decoration: none; }
   font-weight: 700;
   color: var(--dmv-navy);
 }
+.feedback-explanation {
+  margin-top: 10px;
+  padding-top: 10px;
+  border-top: 1px solid rgba(0,0,0,.08);
+  font-size: 0.9rem;
+  font-weight: 400;
+  color: #374151;
+  line-height: 1.6;
+}
+.feedback-tip {
+  margin-top: 6px;
+  font-size: 0.88rem;
+  font-weight: 400;
+  color: #92400e;
+  background: #fffbeb;
+  border-radius: 6px;
+  padding: 5px 10px;
+}
+.feedback-terms {
+  margin-top: 8px;
+  display: flex;
+  flex-wrap: wrap;
+  gap: 6px;
+}
+.term-badge {
+  display: inline-block;
+  background: #eff6ff;
+  border: 1px solid #bfdbfe;
+  border-radius: 6px;
+  padding: 3px 9px;
+  font-size: 0.82rem;
+  color: #1e40af;
+  font-weight: 400;
+}
 
 .q-dot.dot-correct {
   background: var(--dmv-green);

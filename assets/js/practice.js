@@ -132,13 +132,34 @@ function showFeedbackForAnswered(q) {
   const box = document.getElementById('feedback-box');
   const correctText = q.answerText || q.choices[q.answer];
 
+  let html;
   if (isCorrect) {
     box.className = 'practice-feedback feedback-correct';
-    box.innerHTML = `<strong>✓ ถูกต้อง!</strong>`;
+    html = `<strong>✓ ถูกต้อง!</strong>`;
   } else {
     box.className = 'practice-feedback feedback-wrong';
-    box.innerHTML = `<strong>✗ ผิด</strong> — เฉลย: <span class="feedback-answer">${correctText}</span>`;
+    html = `<strong>✗ ผิด</strong> — เฉลย: <span class="feedback-answer">${correctText}</span>`;
   }
+
+  // Explanation (เหตุผล)
+  if (q.explanation) {
+    html += `<div class="feedback-explanation">💡 ${q.explanation}</div>`;
+  }
+
+  // Tip (เคล็ดลับจำง่าย)
+  if (q.tip) {
+    html += `<div class="feedback-tip">📌 ${q.tip}</div>`;
+  }
+
+  // Terms (คำศัพท์ที่อาจงง)
+  if (q.terms && typeof q.terms === 'object' && Object.keys(q.terms).length > 0) {
+    const termList = Object.entries(q.terms)
+      .map(([th, en]) => `<span class="term-badge"><b>${th}</b> = ${en}</span>`)
+      .join('');
+    html += `<div class="feedback-terms">📖 ${termList}</div>`;
+  }
+
+  box.innerHTML = html;
   box.style.display = 'block';
 }
 
