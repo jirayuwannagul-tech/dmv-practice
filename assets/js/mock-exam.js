@@ -108,6 +108,13 @@ function renderQuestion(index) {
     choicesEl.appendChild(item);
   });
 
+  // Restore feedback if this question was already answered
+  if (answers[q.id] !== undefined) {
+    showMockFeedback(q, answers[q.id]);
+  } else {
+    hideMockFeedback();
+  }
+
   updateDots();
   document.getElementById('btn-prev').disabled = index === 0;
   updateNextButton();
@@ -125,13 +132,43 @@ function renderQuestionMedia(q) {
 /* ── Choice ─────────────────────────────────────────────────── */
 function selectChoice(questionId, choiceIndex) {
   answers[questionId] = choiceIndex;
+  const q = questions.find(q => q.id === questionId);
   document.querySelectorAll('.choice-item').forEach((item, i) => {
     item.classList.toggle('selected', i === choiceIndex);
     const radio = item.querySelector('input[type="radio"]');
     if (radio) radio.checked = (i === choiceIndex);
   });
+  if (q) showMockFeedback(q, choiceIndex);
   updateDots();
   updateNextButton();
+}
+
+function showMockFeedback(q, chosenIndex) {
+  const isCorrect  = chosenIndex === q.answer;
+  const box        = document.getElementById('mock-feedback');
+  const correctText = q.answerText || q.choices[q.answer];
+
+  // Color the choices
+  document.querySelectorAll('.choice-item').forEach((item, i) => {
+    item.classList.remove('choice-correct', 'choice-wrong');
+    if (i === q.answer)                              item.classList.add('choice-correct');
+    else if (i === chosenIndex && !isCorrect)        item.classList.add('choice-wrong');
+  });
+
+  if (isCorrect) {
+    box.className = 'mock-feedback feedback-correct';
+    box.innerHTML = '<strong>✓ ถูกต้อง!</strong>';
+  } else {
+    box.className = 'mock-feedback feedback-wrong';
+    box.innerHTML = `<strong>✗ ผิด</strong> — เฉลย: <span class="feedback-answer">${correctText}</span>`;
+  }
+  box.style.display = 'block';
+}
+
+function hideMockFeedback() {
+  const box = document.getElementById('mock-feedback');
+  box.style.display = 'none';
+  box.className = 'mock-feedback';
 }
 
 /* ── Navigation ─────────────────────────────────────────────── */
