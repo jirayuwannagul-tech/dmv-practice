@@ -161,6 +161,9 @@ function showMockFeedback(q, chosenIndex) {
   } else {
     box.className = 'mock-feedback feedback-wrong';
     box.innerHTML = `<strong>✗ ผิด</strong> — เฉลย: <span class="feedback-answer">${correctText}</span>`;
+    if (q.explanation) {
+      box.innerHTML += `<div class="feedback-explanation">💡 ${q.explanation}</div>`;
+    }
   }
   box.style.display = 'block';
 }
